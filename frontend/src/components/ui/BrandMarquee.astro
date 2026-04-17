@@ -1,0 +1,13 @@
+---
+import { resolveMediaUrl } from "../../lib/media.js";
+
+const { brands = [] } = Astro.props;
+---
+
+<div class="brand-marquee" aria-label="Marcas confiables">
+  {brands.map((brand) => (
+    <div class="brand-chip">
+      {brand.logoUrl ? <img src={resolveMediaUrl(brand.logoUrl)} alt={brand.name} /> : <span>{brand.name}</span>}
+    </div>
+  ))}
+</div>

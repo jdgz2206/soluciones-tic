@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPageContent, getSiteSettings, getSupportContent } from "../lib/api.js";
+import { buildCanonical } from "../lib/seo.js";
+import { buildWhatsAppUrl } from "../lib/whatsapp.js";
+
+const [site, page, support] = await Promise.all([
+  getSiteSettings(),
+  getPageContent("soporte"),
+  getSupportContent()
+]);
+
+const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.secondaryWhatsappMessage);
+---
+
+<BaseLayout
+  site={site}
+  title={page.metaTitle}
+  description={page.metaDescription}
+  canonical={buildCanonical("/soporte")}
+>
+  <section class="page-hero">
+    <div class="container page-grid">
+      <article class="page-shell">
+        <p class="page-eyebrow">{page.eyebrow}</p>
+        <h1>{page.heroTitle}</h1>
+        <p>{page.heroIntro}</p>
+        <div class="hero-actions">
+          <a class="button button--primary" href={ctaUrl} target="_blank" rel="noreferrer">
+            {page.ctaLabel}
+          </a>
+        </div>
+      </article>
+
+      <aside class="page-info-grid">
+        <article class="info-card">
+          <span>Objetivo</span>
+          <strong>{page.title}</strong>
+          <p>{support.subtitle}</p>
+        </article>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <div class="container page-sections">
+      {page.sections.map((section) => (
+        <article class="page-section">
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+          <ul>
+            {section.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="container support-layout">
+      <div class="support-card">
+        <div class="section-heading">
+          <p class="section-eyebrow">Centro de descargas</p>
+          <h2>{support.title}</h2>
+          <p>{support.subtitle}</p>
+        </div>
+      </div>
+
+      <div class="tools-grid">
+        {support.tools.map((tool) => (
+          <article class="tool-card">
+            <span class="tool-card__category">{tool.category}</span>
+            <h3>{tool.name}</h3>
+            <p>{tool.description}</p>
+            <a class="tool-card__link" href={tool.url} target="_blank" rel="noreferrer">
+              Abrir descarga
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

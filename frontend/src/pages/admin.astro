@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AdminDashboard from "../components/admin/AdminDashboard.jsx";
+import { getSiteSettings } from "../lib/api.js";
+import { buildCanonical } from "../lib/seo.js";
+
+const site = await getSiteSettings();
+---
+
+<BaseLayout
+  site={site}
+  title={`Panel Admin | ${site.companyName}`}
+  description="Panel privado para administrar el contenido del sitio."
+  canonical={buildCanonical("/admin")}
+  noindex
+>
+  <section class="admin-page">
+    <div class="container">
+      <AdminDashboard client:load />
+    </div>
+  </section>
+</BaseLayout>

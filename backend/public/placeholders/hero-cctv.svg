@@ -1,0 +1,19 @@
+<svg width="1280" height="960" viewBox="0 0 1280 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="960" rx="34" fill="#0B1117"/>
+  <rect x="62" y="62" width="1156" height="836" rx="28" fill="#121922" stroke="#25303E" stroke-width="2"/>
+  <rect x="124" y="128" width="1032" height="704" rx="22" fill="#0F1620"/>
+  <rect x="160" y="164" width="964" height="520" rx="18" fill="#0B1117" stroke="#2E4053" stroke-width="2"/>
+  <path d="M160 276H1124" stroke="#203244" stroke-width="2"/>
+  <path d="M160 388H1124" stroke="#203244" stroke-width="2"/>
+  <path d="M160 500H1124" stroke="#203244" stroke-width="2"/>
+  <path d="M160 612H1124" stroke="#203244" stroke-width="2"/>
+  <path d="M362 164V684" stroke="#203244" stroke-width="2"/>
+  <path d="M564 164V684" stroke="#203244" stroke-width="2"/>
+  <path d="M766 164V684" stroke="#203244" stroke-width="2"/>
+  <path d="M968 164V684" stroke="#203244" stroke-width="2"/>
+  <rect x="404" y="296" width="472" height="236" rx="22" fill="#1A2430" stroke="#4B6B8C" stroke-width="3"/>
+  <rect x="512" y="362" width="256" height="102" rx="14" fill="#E7EEF5"/>
+  <text x="640" y="426" text-anchor="middle" fill="#0F1720" font-size="50" font-family="Arial, sans-serif">CAMARA IP</text>
+  <text x="640" y="776" text-anchor="middle" fill="#8FA8C0" font-size="34" font-family="Arial, sans-serif">Reemplaza esta imagen desde el panel admin</text>
+  <text x="640" y="826" text-anchor="middle" fill="#68A4D9" font-size="42" font-family="Arial, sans-serif">Placeholder principal</text>
+</svg>

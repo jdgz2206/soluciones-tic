@@ -1,0 +1,13 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" rx="32" fill="#020617"/>
+  <rect x="88" y="96" width="1104" height="528" rx="28" fill="#0B1120" stroke="#1E293B" stroke-width="2"/>
+  <rect x="160" y="172" width="292" height="348" rx="24" fill="#0F172A" stroke="#38BDF8" stroke-width="3"/>
+  <rect x="204" y="222" width="204" height="248" rx="18" fill="#E2E8F0"/>
+  <circle cx="306" cy="258" r="18" fill="#0EA5E9"/>
+  <text x="306" y="332" text-anchor="middle" fill="#0F172A" font-size="44" font-family="Arial, sans-serif">8TB</text>
+  <text x="306" y="380" text-anchor="middle" fill="#0F172A" font-size="24" font-family="Arial, sans-serif">WD Purple</text>
+  <text x="548" y="260" fill="#E2E8F0" font-size="36" font-family="Arial, sans-serif">Calculadora de almacenamiento</text>
+  <text x="548" y="324" fill="#94A3B8" font-size="24" font-family="Arial, sans-serif">Demuestra ingeniería y vende mejor el proyecto.</text>
+  <text x="548" y="388" fill="#22C55E" font-size="30" font-family="Arial, sans-serif">H.265 + retención + resolución + cantidad de cámaras</text>
+  <text x="640" y="560" text-anchor="middle" fill="#38BDF8" font-size="42" font-family="Arial, sans-serif">Placeholder de artículo técnico</text>
+</svg>

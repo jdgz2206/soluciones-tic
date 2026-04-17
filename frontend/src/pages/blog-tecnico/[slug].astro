@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getBlogPost, getSiteSettings } from "../../lib/api.js";
+import { buildCanonical } from "../../lib/seo.js";
+import { resolveMediaUrl } from "../../lib/media.js";
+
+export const prerender = false;
+
+const site = await getSiteSettings();
+const post = await getBlogPost(Astro.params.slug);
+
+if (!post) {
+  Astro.response.status = 404;
+}
+---
+
+<BaseLayout
+  site={site}
+  title={post ? `${post.title} | Soluciones TIC` : "Artículo no encontrado | Soluciones TIC"}
+  description={post?.metaDescription || "Artículo no encontrado."}
+  canonical={buildCanonical(`/blog-tecnico/${Astro.params.slug}`)}
+>
+  {post ? (
+    <>
+      <section class="article-hero">
+        <div class="container page-shell">
+          <div class="article-meta">
+            <span>{post.category}</span>
+            <span>{post.readingTime}</span>
+            <span>{post.publishedAt}</span>
+          </div>
+          <h1>{post.title}</h1>
+          <p>{post.excerpt}</p>
+          <img src={resolveMediaUrl(post.coverImage)} alt={post.title} loading="eager" />
+        </div>
+      </section>
+
+      <section>
+        <div class="container article-content">
+          {post.sections.map((section) => (
+            <section>
+              <h2>{section.title}</h2>
+              <p class="spacer-top">{section.content}</p>
+              <ul class="spacer-top">
+                {section.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </section>
+    </>
+  ) : (
+    <section class="article-hero">
+      <div class="container page-shell">
+        <p class="page-eyebrow">404</p>
+        <h1>El artículo que buscas no existe</h1>
+        <p>Revisa el blog técnico o vuelve al inicio para continuar navegando.</p>
+        <div class="hero-actions">
+          <a class="button button--primary" href="/blog-tecnico">Volver al blog</a>
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

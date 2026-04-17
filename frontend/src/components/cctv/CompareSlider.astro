@@ -1,0 +1,51 @@
+---
+const {
+  beforeImage,
+  afterImage,
+  beforeLabel = "Antes",
+  afterLabel = "Después"
+} = Astro.props;
+---
+
+<div class="compare-slider" data-compare-slider style="--split: 54%;">
+  <img class="compare-slider__image" src={beforeImage} alt={beforeLabel} loading="lazy" />
+
+  <div class="compare-slider__overlay" aria-hidden="true">
+    <img class="compare-slider__image" src={afterImage} alt="" loading="lazy" />
+  </div>
+
+  <div class="compare-slider__labels">
+    <span>{beforeLabel}</span>
+    <span>{afterLabel}</span>
+  </div>
+
+  <div class="compare-slider__handle" aria-hidden="true">
+    <span></span>
+  </div>
+
+  <input
+    class="compare-slider__range"
+    type="range"
+    min="15"
+    max="85"
+    value="54"
+    aria-label="Comparar resolución de cámaras"
+  />
+</div>
+
+<script>
+  document.querySelectorAll("[data-compare-slider]").forEach((slider) => {
+    const range = slider.querySelector(".compare-slider__range");
+
+    if (!range) {
+      return;
+    }
+
+    const updateSplit = () => {
+      slider.style.setProperty("--split", `${range.value}%`);
+    };
+
+    updateSplit();
+    range.addEventListener("input", updateSplit);
+  });
+</script>

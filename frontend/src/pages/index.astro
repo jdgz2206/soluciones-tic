@@ -1,0 +1,291 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CompareSlider from "../components/cctv/CompareSlider.astro";
+import StorageCalc from "../components/cctv/StorageCalc.jsx";
+import WarrantyBadge from "../components/ui/WarrantyBadge.astro";
+import BrandMarquee from "../components/ui/BrandMarquee.astro";
+import SmartWhatsAppButton from "../components/ui/SmartWhatsAppButton.jsx";
+import { getHomeContent, getSiteSettings } from "../lib/api.js";
+import { resolveMediaUrl } from "../lib/media.js";
+import { buildCanonical } from "../lib/seo.js";
+import { buildWhatsAppUrl } from "../lib/whatsapp.js";
+
+const [site, home] = await Promise.all([getSiteSettings(), getHomeContent()]);
+
+const primaryWhatsappUrl = buildWhatsAppUrl(site.whatsappNumber, site.primaryWhatsappMessage);
+const secondaryWhatsappUrl = buildWhatsAppUrl(site.whatsappNumber, site.secondaryWhatsappMessage);
+const nightVisionUrl = buildWhatsAppUrl(site.whatsappNumber, home.nightVision.ctaMessage);
+const videoIntercomUrl = buildWhatsAppUrl(site.whatsappNumber, home.videoIntercom.ctaMessage);
+const smartSectionMessages = [
+  {
+    id: "cctv",
+    label: "Cotizar cámaras IP",
+    helper: "Sistema CCTV 4MP+ con garantía técnica",
+    message: site.primaryWhatsappMessage
+  },
+  {
+    id: "colorvu",
+    label: home.nightVision.ctaLabel,
+    helper: "Visión nocturna a color 24/7",
+    message: home.nightVision.ctaMessage
+  },
+  {
+    id: "video-porteros",
+    label: home.videoIntercom.ctaLabel,
+    helper: "Apertura remota y control desde app",
+    message: home.videoIntercom.ctaMessage
+  },
+  {
+    id: "infraestructura",
+    label: "Hablar de redes y NVR",
+    helper: "Cableado, VPN, almacenamiento y acceso remoto",
+    message: site.secondaryWhatsappMessage
+  },
+  {
+    id: "calculadora",
+    label: home.storageCalculator.ctaLabel,
+    helper: "Diseño técnico con cálculo de capacidad",
+    message: home.storageCalculator.ctaMessage
+  }
+];
+---
+
+<BaseLayout
+  site={site}
+  title={`${site.companyName} | Videovigilancia IP y seguridad inteligente`}
+  description={site.tagline}
+  canonical={buildCanonical("/")}
+>
+  <section class="hero" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="section-eyebrow">{home.hero.eyebrow}</p>
+        <h1>{home.hero.title}</h1>
+        <p>{home.hero.subtitle}</p>
+
+        <WarrantyBadge label={home.hero.badgeLabel} />
+
+        <div class="hero-actions">
+          <a class="button button--primary" href={primaryWhatsappUrl} target="_blank" rel="noreferrer">
+            {home.hero.primaryCtaLabel}
+          </a>
+          <a class="button button--secondary" href="#infraestructura">
+            {home.hero.secondaryCtaLabel}
+          </a>
+        </div>
+
+        <div class="service-chip-row spacer-top">
+          {home.secondaryServices.map((service) => (
+            <span class="service-chip">{service}</span>
+          ))}
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <div class="hero-panel__frame">
+          <div class="hero-monitor">
+            <img
+              class="hero-monitor__image"
+              src={resolveMediaUrl(home.hero.visualImage)}
+              alt={home.hero.visualAlt || "Imagen principal de videovigilancia"}
+              loading="eager"
+            />
+            <div class="hero-monitor__badge">{home.hero.visualBadge}</div>
+          </div>
+
+          <div class="hero-summary">
+            {home.hero.floatingStats.map((stat) => (
+              <article>
+                <span>Estado operativo</span>
+                <strong>{stat}</strong>
+              </article>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="cctv">
+    <div class="container section-block">
+      <div class="section-heading">
+        <p class="section-eyebrow">Comparador técnico</p>
+        <h2>{home.compare.title}</h2>
+        <p>{home.compare.subtitle}</p>
+      </div>
+
+      <div class="compare-layout">
+        <CompareSlider
+          beforeImage={resolveMediaUrl(home.compare.beforeImage)}
+          afterImage={resolveMediaUrl(home.compare.afterImage)}
+          beforeLabel={home.compare.beforeLabel}
+          afterLabel={home.compare.afterLabel}
+        />
+
+        <div class="surface-card">
+          <h3>{home.compare.detailsTitle}</h3>
+          <p>{home.compare.detailsBody}</p>
+          <ul>
+            {home.compare.detailsBullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+          <p class="spacer-top">{home.compare.note}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container section-block showcase-stack">
+      <article class="showcase-card" id="colorvu">
+        <div class="showcase-card__media">
+          <img src={resolveMediaUrl(home.nightVision.image)} alt={home.nightVision.imageAlt} loading="lazy" />
+          <span class="showcase-card__badge">{home.nightVision.badge}</span>
+        </div>
+
+        <div class="showcase-card__content">
+          <p class="section-eyebrow">{home.nightVision.eyebrow}</p>
+          <h2>{home.nightVision.title}</h2>
+          <p>{home.nightVision.subtitle}</p>
+          <ul>
+            {home.nightVision.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+
+          <a class="button button--primary" href={nightVisionUrl} target="_blank" rel="noreferrer">
+            {home.nightVision.ctaLabel}
+          </a>
+        </div>
+      </article>
+
+      <article class="showcase-card showcase-card--reverse" id="video-porteros">
+        <div class="showcase-card__media">
+          <img src={resolveMediaUrl(home.videoIntercom.image)} alt={home.videoIntercom.imageAlt} loading="lazy" />
+          <span class="showcase-card__badge">{home.videoIntercom.badge}</span>
+        </div>
+
+        <div class="showcase-card__content">
+          <p class="section-eyebrow">{home.videoIntercom.eyebrow}</p>
+          <h2>{home.videoIntercom.title}</h2>
+          <p>{home.videoIntercom.subtitle}</p>
+          <ul>
+            {home.videoIntercom.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+
+          <a class="button button--primary" href={videoIntercomUrl} target="_blank" rel="noreferrer">
+            {home.videoIntercom.ctaLabel}
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="soluciones">
+    <div class="container section-block">
+      <div class="section-heading">
+        <p class="section-eyebrow">{home.quickSolutions.eyebrow}</p>
+        <h2>{home.quickSolutions.title}</h2>
+        <p>{home.quickSolutions.subtitle}</p>
+      </div>
+
+      <div class="solution-grid">
+        {home.quickSolutions.items.map((item) => (
+          <article class="solution-card">
+            <span class="solution-card__tag">{item.tag}</span>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+            <a
+              class="solution-card__link"
+              href={buildWhatsAppUrl(site.whatsappNumber, item.message)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Solicitar información
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band-section" id="infraestructura">
+    <div class="container section-block">
+      <div class="section-heading section-heading--inverse">
+        <p class="section-eyebrow">{home.infrastructure.eyebrow}</p>
+        <h2>{home.infrastructure.title}</h2>
+        <p>{home.infrastructure.subtitle}</p>
+      </div>
+
+      <div class="infrastructure-grid">
+        {home.infrastructure.items.map((item) => (
+          <article class="infra-card">
+            <span class="solution-card__tag">{item.badge}</span>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+            <a
+              class="solution-card__link"
+              href={buildWhatsAppUrl(site.whatsappNumber, item.message)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Hablar con ingeniería
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="hero-actions">
+        <a class="button button--primary" href={secondaryWhatsappUrl} target="_blank" rel="noreferrer">
+          Agenda una auditoría técnica
+        </a>
+        <a class="button button--ghost button--light" href="/redes-y-vpn">
+          Ver detalle de redes y VPN
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="calculadora">
+    <div class="container">
+      <StorageCalc client:load content={home.storageCalculator} whatsappNumber={site.whatsappNumber} />
+    </div>
+  </section>
+
+  <section id="confianza">
+    <div class="container trust-banner">
+      <div class="trust-layout">
+        <div class="section-heading">
+          <p class="section-eyebrow">{home.trustBanner.eyebrow}</p>
+          <h2>{home.trustBanner.title}</h2>
+          <p>{home.trustBanner.subtitle}</p>
+
+          <BrandMarquee brands={home.trustBanner.brands} />
+        </div>
+
+        <div class="promise-grid">
+          {home.trustBanner.promiseItems.map((item) => (
+            <article class="metric-card">
+              <span>Respaldo</span>
+              <strong>{item}</strong>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a class="button button--primary" href={primaryWhatsappUrl} target="_blank" rel="noreferrer">
+          {home.trustBanner.primaryCtaLabel}
+        </a>
+        <a class="button button--ghost" href={secondaryWhatsappUrl} target="_blank" rel="noreferrer">
+          {home.trustBanner.secondaryCtaLabel}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <SmartWhatsAppButton client:load number={site.whatsappNumber} sectionMessages={smartSectionMessages} />
+</BaseLayout>

@@ -1,0 +1,19 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" rx="32" fill="#020817"/>
+  <rect x="48" y="48" width="1184" height="624" rx="24" fill="#06111F"/>
+  <g opacity="0.18">
+    <path d="M48 164H1232" stroke="#22C55E" stroke-width="2"/>
+    <path d="M48 300H1232" stroke="#22C55E" stroke-width="2"/>
+    <path d="M48 436H1232" stroke="#22C55E" stroke-width="2"/>
+    <path d="M48 572H1232" stroke="#22C55E" stroke-width="2"/>
+    <path d="M216 48V672" stroke="#22C55E" stroke-width="2"/>
+    <path d="M472 48V672" stroke="#22C55E" stroke-width="2"/>
+    <path d="M728 48V672" stroke="#22C55E" stroke-width="2"/>
+    <path d="M984 48V672" stroke="#22C55E" stroke-width="2"/>
+  </g>
+  <rect x="178" y="196" width="924" height="276" rx="28" fill="#0F172A" stroke="#22C55E" stroke-width="4"/>
+  <rect x="490" y="248" width="300" height="168" rx="18" fill="#DCFCE7"/>
+  <text x="640" y="318" text-anchor="middle" fill="#052E16" font-size="58" font-family="Arial, sans-serif">PZQ-427</text>
+  <text x="640" y="370" text-anchor="middle" fill="#052E16" font-size="34" font-family="Arial, sans-serif">Lectura nítida</text>
+  <text x="640" y="548" text-anchor="middle" fill="#22C55E" font-size="46" font-family="Arial, sans-serif">Placeholder 4MP / 8MP</text>
+</svg>

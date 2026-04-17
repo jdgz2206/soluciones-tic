@@ -1,0 +1,14 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="28" fill="#F7FBFF"/>
+  <circle cx="64" cy="64" r="44" fill="#102040"/>
+  <circle cx="64" cy="64" r="39" stroke="#30B0D0" stroke-width="2.5" stroke-opacity="0.9"/>
+  <path d="M32 70C39 63 45 60 52 61C59 62 65 67 72 68C79 69 88 66 97 57" stroke="#30B0D0" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="41" cy="53" r="8" fill="#F7FBFF" stroke="#30B0D0" stroke-width="2"/>
+  <circle cx="87" cy="53" r="8" fill="#F7FBFF" stroke="#30B0D0" stroke-width="2"/>
+  <circle cx="64" cy="34" r="9" fill="#F7FBFF" stroke="#30B0D0" stroke-width="2"/>
+  <circle cx="64" cy="91" r="10" fill="#30B0D0"/>
+  <path d="M64 44V54" stroke="#F7FBFF" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M48 58H80" stroke="#F7FBFF" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="64" y="73" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="700">J&amp;J</text>
+  <text x="64" y="88" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="10" font-weight="700">TIC</text>
+</svg>

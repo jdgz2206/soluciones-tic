@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getBlogPosts, getPageContent, getSiteSettings } from "../../lib/api.js";
+import { buildCanonical } from "../../lib/seo.js";
+import { buildWhatsAppUrl } from "../../lib/whatsapp.js";
+import { resolveMediaUrl } from "../../lib/media.js";
+
+const [site, page, posts] = await Promise.all([
+  getSiteSettings(),
+  getPageContent("blog-tecnico"),
+  getBlogPosts()
+]);
+
+const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.primaryWhatsappMessage);
+---
+
+<BaseLayout
+  site={site}
+  title={page.metaTitle}
+  description={page.metaDescription}
+  canonical={buildCanonical("/blog-tecnico")}
+>
+  <section class="article-hero">
+    <div class="container page-shell">
+      <p class="page-eyebrow">{page.eyebrow}</p>
+      <h1>{page.heroTitle}</h1>
+      <p>{page.heroIntro}</p>
+      <div class="hero-actions">
+        <a class="button button--primary" href={ctaUrl} target="_blank" rel="noreferrer">
+          {page.ctaLabel}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container article-grid">
+      {posts.map((post) => (
+        <article class="article-card">
+          <img src={resolveMediaUrl(post.coverImage)} alt={post.title} loading="lazy" />
+          <div class="article-meta">
+            <span>{post.category}</span>
+            <span>{post.readingTime}</span>
+            <span>{post.publishedAt}</span>
+          </div>
+          <h2>{post.title}</h2>
+          <p>{post.excerpt}</p>
+          <a class="solution-card__link" href={`/blog-tecnico/${post.slug}`}>
+            Leer artículo
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
