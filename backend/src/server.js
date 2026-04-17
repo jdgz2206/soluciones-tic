@@ -32,7 +32,7 @@ const upload = multer({
   },
   fileFilter: (_request, file, callback) => {
     if (!file.mimetype.startsWith("image/")) {
-      return callback(new Error("Solo se permiten imágenes."));
+      return callback(new Error("Solo se permiten imagenes."));
     }
 
     return callback(null, true);
@@ -41,7 +41,7 @@ const upload = multer({
 
 app.use(
   cors({
-    origin: [config.frontendOrigin],
+    origin: config.frontendOrigins,
     credentials: false
   })
 );
@@ -91,7 +91,7 @@ app.get("/api/public/page/:slug", async (request, response, next) => {
     const page = pages[request.params.slug];
 
     if (!page) {
-      return response.status(404).json({ error: "Página no encontrada." });
+      return response.status(404).json({ error: "Pagina no encontrada." });
     }
 
     return response.json(page);
@@ -116,7 +116,7 @@ app.get("/api/public/blog/:slug", async (request, response, next) => {
     const post = posts.find((entry) => entry.slug === request.params.slug);
 
     if (!post) {
-      return response.status(404).json({ error: "Artículo no encontrado." });
+      return response.status(404).json({ error: "Articulo no encontrado." });
     }
 
     return response.json(post);
@@ -154,7 +154,7 @@ for (const key of ["site", "home", "pages", "blog", "support"]) {
 app.post("/api/admin/upload", requireAuth, upload.single("image"), async (request, response, next) => {
   try {
     if (!request.file) {
-      return response.status(400).json({ error: "No se recibió ninguna imagen." });
+      return response.status(400).json({ error: "No se recibio ninguna imagen." });
     }
 
     return response.json({
@@ -167,10 +167,10 @@ app.post("/api/admin/upload", requireAuth, upload.single("image"), async (reques
 
 app.use((error, _request, response, _next) => {
   const message = error?.message || "Error interno del servidor.";
-  const status = message === "Solo se permiten imágenes." ? 400 : 500;
+  const status = message === "Solo se permiten imagenes." ? 400 : 500;
   response.status(status).json({ error: message });
 });
 
-app.listen(config.port, () => {
-  console.log(`Soluciones TIC backend corriendo en http://localhost:${config.port}`);
+app.listen(config.port, config.host, () => {
+  console.log(`Soluciones TIC backend corriendo en http://${config.host}:${config.port}`);
 });

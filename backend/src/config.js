@@ -7,12 +7,18 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const backendRoot = path.resolve(__dirname, "..");
-const storageRoot = path.join(backendRoot, "storage");
+const storageRoot =
+  process.env.STORAGE_ROOT || process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(backendRoot, "storage");
+const frontendOrigins = (process.env.FRONTEND_ORIGIN || "http://localhost:4321")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 export const config = {
   backendRoot,
+  host: process.env.HOST || "0.0.0.0",
   port: Number(process.env.PORT || 4000),
-  frontendOrigin: process.env.FRONTEND_ORIGIN || "http://localhost:4321",
+  frontendOrigins,
   adminUsername: process.env.ADMIN_USERNAME || "admin",
   adminPassword: process.env.ADMIN_PASSWORD || "cambia-esta-clave",
   tokenSecret: process.env.TOKEN_SECRET || "cambia-esta-clave-super-segura",

@@ -1,23 +1,23 @@
 # Soluciones TIC
 
-Sitio comercial para captación de clientes, enfocado en videovigilancia IP, con panel administrativo para editar textos e imágenes sin tocar código.
+Sitio comercial para captacion de clientes, enfocado en videovigilancia IP, con panel administrativo para editar textos e imagenes sin tocar codigo.
 
 ## Stack
 
 - `frontend/`: Astro SSR + componentes React para las partes interactivas
-- `backend/`: Express para contenido editable, autenticación simple y subida de imágenes
+- `backend/`: Express para contenido editable, autenticacion simple y subida de imagenes
 - `shared/`: contenido por defecto compartido entre frontend y backend
 
-## Qué incluye
+## Que incluye
 
 - Home comercial enfocada en CCTV IP
-- Comparador de resolución `2MP vs 4MP / 8MP`
+- Comparador de resolucion `2MP vs 4MP / 8MP`
 - Calculadora profesional de almacenamiento CCTV
-- Módulos de ColorVu / Full Color y videoporteros IP
-- Páginas SEO para redes, servidores, blog técnico y soporte
-- Panel `/admin` para editar textos, imágenes, mensajes y marcas
+- Modulos de ColorVu / Full Color y videoporteros IP
+- Paginas SEO para redes, servidores, blog tecnico y soporte
+- Panel `/admin` para editar textos, imagenes, mensajes y marcas
 
-## Estructura clave
+## Estructura
 
 ```text
 /frontend
@@ -64,7 +64,7 @@ Usa como base:
 npm run dev
 ```
 
-Nota: si solo quieres probar una versión estable local, compila y usa la versión productiva:
+4. Para correr una version estable local:
 
 ```bash
 npm run build
@@ -85,13 +85,13 @@ El contenido vivo se guarda en:
 - `backend/storage/content`
 - `backend/storage/uploads`
 
-Esas rutas están ignoradas por Git a propósito. Cuando faltan archivos, el backend reconstruye la base desde:
+Esas rutas estan ignoradas por Git a proposito. Cuando faltan archivos, el backend reconstruye la base desde:
 
 - `shared/content-defaults.js`
 
 ## Assets versionados
 
-Los assets de marca que sí deben viajar en el repo están en:
+Los assets de marca que si deben viajar en el repo estan en:
 
 - `frontend/public`
 - `backend/public/branding`
@@ -99,10 +99,15 @@ Los assets de marca que sí deben viajar en el repo están en:
 
 ## Despliegue
 
-La guía de VPS está en:
+- VPS: `docs/DEPLOY_VPS.md`
+- Railway: `docs/DEPLOY_RAILWAY.md`
 
-- `docs/DEPLOY_VPS.md`
+## Nota importante sobre Railway
 
-El proyecto también incluye configuración base para PM2 en:
+Para que las imagenes subidas y el contenido editado no se pierdan en Railway, el servicio `backend` debe tener un `Volume` adjunto. Railway documenta que los volumes son la forma de persistir datos entre reinicios y despliegues.
 
-- `ecosystem.config.cjs`
+Fuentes oficiales:
+
+- [Railway Volumes](https://docs.railway.com/guides/volumes)
+- [Railway Monorepo](https://docs.railway.com/deployments/monorepo)
+- [Railway Public Networking](https://docs.railway.com/guides/public-networking)
