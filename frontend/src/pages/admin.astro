@@ -1,22 +1,26 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AdminDashboard from "../components/admin/AdminDashboard.jsx";
-import { getSiteSettings } from "../lib/api.js";
+import { getPublicApiBaseUrl, getSiteSettings } from "../lib/api.js";
 import { buildCanonical } from "../lib/seo.js";
 
-const site = await getSiteSettings();
+const requestOrigin = Astro.url.origin;
+const site = await getSiteSettings({ requestOrigin });
+const apiBaseUrl = getPublicApiBaseUrl(requestOrigin);
 ---
 
 <BaseLayout
   site={site}
   title={`Panel Admin | ${site.companyName}`}
   description="Panel privado para administrar el contenido del sitio."
-  canonical={buildCanonical("/admin")}
+  canonical={buildCanonical("/admin", requestOrigin)}
   noindex
 >
   <section class="admin-page">
     <div class="container">
-      <AdminDashboard client:load />
+      <AdminDashboard client:load apiBaseUrl={apiBaseUrl} />
     </div>
   </section>
 </BaseLayout>

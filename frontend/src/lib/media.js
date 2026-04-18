@@ -1,4 +1,8 @@
-export function resolveMediaUrl(source = "") {
+function readRuntimeEnv(name) {
+  return typeof process !== "undefined" ? process.env?.[name] || "" : "";
+}
+
+export function resolveMediaUrl(source = "", requestOrigin = "") {
   if (!source) {
     return "";
   }
@@ -7,7 +11,10 @@ export function resolveMediaUrl(source = "") {
     return source;
   }
 
-  const base = import.meta.env.PUBLIC_API_BASE_URL || "http://localhost:4000";
+  const base =
+    readRuntimeEnv("PUBLIC_API_BASE_URL") ||
+    import.meta.env.PUBLIC_API_BASE_URL ||
+    (import.meta.env.DEV ? "http://localhost:4000" : requestOrigin || "");
   const normalized = source.startsWith("/") ? source : `/${source}`;
-  return `${base}${normalized}`;
+  return base ? `${base}${normalized}` : normalized;
 }

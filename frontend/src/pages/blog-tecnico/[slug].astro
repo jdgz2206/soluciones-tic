@@ -1,13 +1,14 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getBlogPost, getSiteSettings } from "../../lib/api.js";
 import { buildCanonical } from "../../lib/seo.js";
 import { resolveMediaUrl } from "../../lib/media.js";
 
-export const prerender = false;
-
-const site = await getSiteSettings();
-const post = await getBlogPost(Astro.params.slug);
+const requestOrigin = Astro.url.origin;
+const site = await getSiteSettings({ requestOrigin });
+const post = await getBlogPost(Astro.params.slug, { requestOrigin });
 
 if (!post) {
   Astro.response.status = 404;
@@ -18,7 +19,7 @@ if (!post) {
   site={site}
   title={post ? `${post.title} | Soluciones TIC` : "Artículo no encontrado | Soluciones TIC"}
   description={post?.metaDescription || "Artículo no encontrado."}
-  canonical={buildCanonical(`/blog-tecnico/${Astro.params.slug}`)}
+  canonical={buildCanonical(`/blog-tecnico/${Astro.params.slug}`, requestOrigin)}
 >
   {post ? (
     <>
@@ -31,7 +32,7 @@ if (!post) {
           </div>
           <h1>{post.title}</h1>
           <p>{post.excerpt}</p>
-          <img src={resolveMediaUrl(post.coverImage)} alt={post.title} loading="eager" />
+          <img src={resolveMediaUrl(post.coverImage, requestOrigin)} alt={post.title} loading="eager" />
         </div>
       </section>
 

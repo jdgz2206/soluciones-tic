@@ -11,11 +11,13 @@ const {
   noindex = false
 } = Astro.props;
 
+const requestOrigin = Astro.url.origin;
+
 const [redesPage, servidoresPage, blogPage, soportePage] = await Promise.all([
-  getPageContent("redes-y-vpn"),
-  getPageContent("servidores"),
-  getPageContent("blog-tecnico"),
-  getPageContent("soporte")
+  getPageContent("redes-y-vpn", { requestOrigin }),
+  getPageContent("servidores", { requestOrigin }),
+  getPageContent("blog-tecnico", { requestOrigin }),
+  getPageContent("soporte", { requestOrigin })
 ]);
 
 const navigationItems = [
@@ -55,7 +57,7 @@ const navigationItems = [
               <span class="brand-mark__media">
                 <img
                   class="brand-mark__logo"
-                  src={resolveMediaUrl(site.logoPath)}
+                  src={resolveMediaUrl(site.logoPath, requestOrigin)}
                   alt={`Logo de ${site?.companyName || "Soluciones TIC"}`}
                   loading="eager"
                 />

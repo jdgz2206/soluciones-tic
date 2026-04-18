@@ -1,14 +1,17 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getBlogPosts, getPageContent, getSiteSettings } from "../../lib/api.js";
 import { buildCanonical } from "../../lib/seo.js";
 import { buildWhatsAppUrl } from "../../lib/whatsapp.js";
 import { resolveMediaUrl } from "../../lib/media.js";
 
+const requestOrigin = Astro.url.origin;
 const [site, page, posts] = await Promise.all([
-  getSiteSettings(),
-  getPageContent("blog-tecnico"),
-  getBlogPosts()
+  getSiteSettings({ requestOrigin }),
+  getPageContent("blog-tecnico", { requestOrigin }),
+  getBlogPosts({ requestOrigin })
 ]);
 
 const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.primaryWhatsappMessage);
@@ -18,7 +21,7 @@ const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.pri
   site={site}
   title={page.metaTitle}
   description={page.metaDescription}
-  canonical={buildCanonical("/blog-tecnico")}
+  canonical={buildCanonical("/blog-tecnico", requestOrigin)}
 >
   <section class="article-hero">
     <div class="container page-shell">
@@ -37,7 +40,7 @@ const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.pri
     <div class="container article-grid">
       {posts.map((post) => (
         <article class="article-card">
-          <img src={resolveMediaUrl(post.coverImage)} alt={post.title} loading="lazy" />
+          <img src={resolveMediaUrl(post.coverImage, requestOrigin)} alt={post.title} loading="lazy" />
           <div class="article-meta">
             <span>{post.category}</span>
             <span>{post.readingTime}</span>

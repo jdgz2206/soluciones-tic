@@ -41,7 +41,21 @@ const upload = multer({
 
 app.use(
   cors({
-    origin: config.frontendOrigins,
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (!config.frontendOrigins.length && !config.isProduction) {
+        return callback(null, true);
+      }
+
+      if (config.frontendOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Origen no permitido por CORS."));
+    },
     credentials: false
   })
 );
@@ -167,7 +181,12 @@ app.post("/api/admin/upload", requireAuth, upload.single("image"), async (reques
 
 app.use((error, _request, response, _next) => {
   const message = error?.message || "Error interno del servidor.";
-  const status = message === "Solo se permiten imagenes." ? 400 : 500;
+  const status =
+    message === "Solo se permiten imagenes."
+      ? 400
+      : message === "Origen no permitido por CORS."
+        ? 403
+        : 500;
   response.status(status).json({ error: message });
 });
 

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = import.meta.env.PUBLIC_API_BASE_URL || "http://localhost:4000";
 const PAGE_KEYS = ["redes-y-vpn", "servidores", "soporte", "blog-tecnico"];
 
 const linesToArray = (value) =>
@@ -10,6 +9,10 @@ const linesToArray = (value) =>
     .filter(Boolean);
 
 const arrayToLines = (value = []) => value.join("\n");
+
+function buildApiUrl(apiBaseUrl = "", path = "") {
+  return apiBaseUrl ? `${apiBaseUrl}${path}` : path;
+}
 
 function Field({ label, value, onChange, multiline = false, placeholder = "", type = "text" }) {
   return (
@@ -24,12 +27,12 @@ function Field({ label, value, onChange, multiline = false, placeholder = "", ty
   );
 }
 
-function ImageField({ label, value, token, onUploaded }) {
+function ImageField({ label, value, token, onUploaded, apiBaseUrl }) {
   const [uploading, setUploading] = useState(false);
   const preview = value
     ? /^https?:\/\//i.test(value)
       ? value
-      : `${API_BASE}${value.startsWith("/") ? value : `/${value}`}`
+      : buildApiUrl(apiBaseUrl, value.startsWith("/") ? value : `/${value}`)
     : "";
 
   async function handleFileChange(event) {
@@ -40,7 +43,7 @@ function ImageField({ label, value, token, onUploaded }) {
     setUploading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/admin/upload`, {
+      const response = await fetch(buildApiUrl(apiBaseUrl, "/api/admin/upload"), {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body
@@ -103,7 +106,7 @@ function SectionEditor({ sections = [], onChange }) {
   );
 }
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ apiBaseUrl = "" }) {
   const [token, setToken] = useState("");
   const [form, setForm] = useState({ username: "", password: "" });
   const [data, setData] = useState(null);
@@ -125,7 +128,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`${API_BASE}/api/admin/bootstrap`, {
+      const response = await fetch(buildApiUrl(apiBaseUrl, "/api/admin/bootstrap"), {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       if (!response.ok) throw new Error("No se pudo cargar el contenido editable.");
@@ -144,7 +147,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
+      const response = await fetch(buildApiUrl(apiBaseUrl, "/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
@@ -166,7 +169,7 @@ export default function AdminDashboard() {
     setStatus("Guardando cambios...");
     setError("");
     try {
-      const response = await fetch(`${API_BASE}/api/admin/${name}`, {
+      const response = await fetch(buildApiUrl(apiBaseUrl, `/api/admin/${name}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(data[name])
@@ -186,7 +189,7 @@ export default function AdminDashboard() {
     setError("");
     try {
       for (const name of ["site", "home", "pages", "blog", "support"]) {
-        const response = await fetch(`${API_BASE}/api/admin/${name}`, {
+        const response = await fetch(buildApiUrl(apiBaseUrl, `/api/admin/${name}`), {
           method: "PUT",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(data[name])
@@ -383,7 +386,7 @@ export default function AdminDashboard() {
           <Field label="Correo" value={site.email} onChange={(value) => updateSite({ email: value })} />
           <Field label="Ubicación" value={site.location} onChange={(value) => updateSite({ location: value })} />
         </div>
-        <ImageField label="Logo principal" value={site.logoPath} token={token} onUploaded={(value) => updateSite({ logoPath: value })} />
+        <ImageField label="Logo principal" value={site.logoPath} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateSite({ logoPath: value })} />
         <Field label="Mensaje principal de WhatsApp" value={site.primaryWhatsappMessage} multiline onChange={(value) => updateSite({ primaryWhatsappMessage: value })} />
         <Field label="Mensaje de redes y servidores" value={site.secondaryWhatsappMessage} multiline onChange={(value) => updateSite({ secondaryWhatsappMessage: value })} />
         <Field label="Nota de cobertura" value={site.coverageNote} multiline onChange={(value) => updateSite({ coverageNote: value })} />
@@ -412,7 +415,7 @@ export default function AdminDashboard() {
             <Field label="Texto sobre la imagen" value={home.hero.visualBadge} onChange={(value) => updateHomeBlock("hero", { visualBadge: value })} />
             <Field label="Texto alternativo" value={home.hero.visualAlt} onChange={(value) => updateHomeBlock("hero", { visualAlt: value })} />
           </div>
-          <ImageField label="Imagen principal del hero" value={home.hero.visualImage} token={token} onUploaded={(value) => updateHomeBlock("hero", { visualImage: value })} />
+          <ImageField label="Imagen principal del hero" value={home.hero.visualImage} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateHomeBlock("hero", { visualImage: value })} />
           <Field label="Badge de garantía" value={home.hero.badgeLabel} onChange={(value) => updateHomeBlock("hero", { badgeLabel: value })} />
           <Field label="Indicadores del hero (uno por línea)" value={arrayToLines(home.hero.floatingStats)} multiline onChange={(value) => updateHomeBlock("hero", { floatingStats: linesToArray(value) })} />
           <Field label="Servicios complementarios (uno por línea)" value={arrayToLines(home.secondaryServices)} multiline onChange={(value) => updateHomeRoot({ secondaryServices: linesToArray(value) })} />
@@ -431,8 +434,8 @@ export default function AdminDashboard() {
           <Field label="Bullets internos (uno por línea)" value={arrayToLines(home.compare.detailsBullets)} multiline onChange={(value) => updateHomeBlock("compare", { detailsBullets: linesToArray(value) })} />
           <Field label="Nota" value={home.compare.note} multiline onChange={(value) => updateHomeBlock("compare", { note: value })} />
           <div className="admin-grid">
-            <ImageField label="Imagen 2MP" value={home.compare.beforeImage} token={token} onUploaded={(value) => updateHomeBlock("compare", { beforeImage: value })} />
-            <ImageField label="Imagen 4MP / 8MP" value={home.compare.afterImage} token={token} onUploaded={(value) => updateHomeBlock("compare", { afterImage: value })} />
+              <ImageField label="Imagen 2MP" value={home.compare.beforeImage} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateHomeBlock("compare", { beforeImage: value })} />
+              <ImageField label="Imagen 4MP / 8MP" value={home.compare.afterImage} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateHomeBlock("compare", { afterImage: value })} />
           </div>
         </div>
 
@@ -448,7 +451,7 @@ export default function AdminDashboard() {
           <Field label="Bullets (uno por línea)" value={arrayToLines(home.nightVision.bullets)} multiline onChange={(value) => updateHomeBlock("nightVision", { bullets: linesToArray(value) })} />
           <div className="admin-grid">
             <Field label="CTA" value={home.nightVision.ctaLabel} onChange={(value) => updateHomeBlock("nightVision", { ctaLabel: value })} />
-            <ImageField label="Imagen del bloque" value={home.nightVision.image} token={token} onUploaded={(value) => updateHomeBlock("nightVision", { image: value })} />
+              <ImageField label="Imagen del bloque" value={home.nightVision.image} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateHomeBlock("nightVision", { image: value })} />
           </div>
           <Field label="Mensaje de WhatsApp" value={home.nightVision.ctaMessage} multiline onChange={(value) => updateHomeBlock("nightVision", { ctaMessage: value })} />
         </div>
@@ -465,7 +468,7 @@ export default function AdminDashboard() {
           <Field label="Bullets (uno por línea)" value={arrayToLines(home.videoIntercom.bullets)} multiline onChange={(value) => updateHomeBlock("videoIntercom", { bullets: linesToArray(value) })} />
           <div className="admin-grid">
             <Field label="CTA" value={home.videoIntercom.ctaLabel} onChange={(value) => updateHomeBlock("videoIntercom", { ctaLabel: value })} />
-            <ImageField label="Imagen del bloque" value={home.videoIntercom.image} token={token} onUploaded={(value) => updateHomeBlock("videoIntercom", { image: value })} />
+              <ImageField label="Imagen del bloque" value={home.videoIntercom.image} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateHomeBlock("videoIntercom", { image: value })} />
           </div>
           <Field label="Mensaje de WhatsApp" value={home.videoIntercom.ctaMessage} multiline onChange={(value) => updateHomeBlock("videoIntercom", { ctaMessage: value })} />
         </div>
@@ -566,7 +569,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="admin-grid">
                   <Field label="Nombre" value={brand.name} onChange={(value) => updateBrand(index, { name: value })} />
-                  <ImageField label="Logo opcional" value={brand.logoUrl} token={token} onUploaded={(value) => updateBrand(index, { logoUrl: value })} />
+                  <ImageField label="Logo opcional" value={brand.logoUrl} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateBrand(index, { logoUrl: value })} />
                 </div>
               </article>
             ))}
@@ -635,7 +638,7 @@ export default function AdminDashboard() {
               <Field label="Título" value={post.title} onChange={(value) => updateBlogPost(index, { title: value })} />
               <Field label="Extracto" value={post.excerpt} multiline onChange={(value) => updateBlogPost(index, { excerpt: value })} />
               <Field label="Meta description" value={post.metaDescription} multiline onChange={(value) => updateBlogPost(index, { metaDescription: value })} />
-              <ImageField label="Portada" value={post.coverImage} token={token} onUploaded={(value) => updateBlogPost(index, { coverImage: value })} />
+              <ImageField label="Portada" value={post.coverImage} token={token} apiBaseUrl={apiBaseUrl} onUploaded={(value) => updateBlogPost(index, { coverImage: value })} />
               <SectionEditor sections={post.sections || []} onChange={(sections) => updateBlogPost(index, { sections })} />
             </article>
           ))}

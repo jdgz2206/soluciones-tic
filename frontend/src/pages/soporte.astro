@@ -1,13 +1,16 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPageContent, getSiteSettings, getSupportContent } from "../lib/api.js";
 import { buildCanonical } from "../lib/seo.js";
 import { buildWhatsAppUrl } from "../lib/whatsapp.js";
 
+const requestOrigin = Astro.url.origin;
 const [site, page, support] = await Promise.all([
-  getSiteSettings(),
-  getPageContent("soporte"),
-  getSupportContent()
+  getSiteSettings({ requestOrigin }),
+  getPageContent("soporte", { requestOrigin }),
+  getSupportContent({ requestOrigin })
 ]);
 
 const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.secondaryWhatsappMessage);
@@ -17,7 +20,7 @@ const ctaUrl = buildWhatsAppUrl(site.whatsappNumber, page.ctaMessage || site.sec
   site={site}
   title={page.metaTitle}
   description={page.metaDescription}
-  canonical={buildCanonical("/soporte")}
+  canonical={buildCanonical("/soporte", requestOrigin)}
 >
   <section class="page-hero">
     <div class="container page-grid">

@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CompareSlider from "../components/cctv/CompareSlider.astro";
 import StorageCalc from "../components/cctv/StorageCalc.jsx";
@@ -10,7 +12,11 @@ import { resolveMediaUrl } from "../lib/media.js";
 import { buildCanonical } from "../lib/seo.js";
 import { buildWhatsAppUrl } from "../lib/whatsapp.js";
 
-const [site, home] = await Promise.all([getSiteSettings(), getHomeContent()]);
+const requestOrigin = Astro.url.origin;
+const [site, home] = await Promise.all([
+  getSiteSettings({ requestOrigin }),
+  getHomeContent({ requestOrigin })
+]);
 
 const primaryWhatsappUrl = buildWhatsAppUrl(site.whatsappNumber, site.primaryWhatsappMessage);
 const secondaryWhatsappUrl = buildWhatsAppUrl(site.whatsappNumber, site.secondaryWhatsappMessage);
@@ -54,9 +60,9 @@ const smartSectionMessages = [
   site={site}
   title={`${site.companyName} | Videovigilancia IP y seguridad inteligente`}
   description={site.tagline}
-  canonical={buildCanonical("/")}
+  canonical={buildCanonical("/", requestOrigin)}
 >
-  <section class="hero" id="hero">
+  <section class="hero home-panel home-panel--hero" id="hero">
     <div class="container hero-grid">
       <div class="hero-copy">
         <p class="section-eyebrow">{home.hero.eyebrow}</p>
@@ -86,7 +92,7 @@ const smartSectionMessages = [
           <div class="hero-monitor">
             <img
               class="hero-monitor__image"
-              src={resolveMediaUrl(home.hero.visualImage)}
+              src={resolveMediaUrl(home.hero.visualImage, requestOrigin)}
               alt={home.hero.visualAlt || "Imagen principal de videovigilancia"}
               loading="eager"
             />
@@ -106,7 +112,7 @@ const smartSectionMessages = [
     </div>
   </section>
 
-  <section id="cctv">
+  <section class="home-panel home-panel--compare" id="cctv">
     <div class="container section-block">
       <div class="section-heading">
         <p class="section-eyebrow">Comparador técnico</p>
@@ -116,8 +122,8 @@ const smartSectionMessages = [
 
       <div class="compare-layout">
         <CompareSlider
-          beforeImage={resolveMediaUrl(home.compare.beforeImage)}
-          afterImage={resolveMediaUrl(home.compare.afterImage)}
+          beforeImage={resolveMediaUrl(home.compare.beforeImage, requestOrigin)}
+          afterImage={resolveMediaUrl(home.compare.afterImage, requestOrigin)}
           beforeLabel={home.compare.beforeLabel}
           afterLabel={home.compare.afterLabel}
         />
@@ -136,11 +142,11 @@ const smartSectionMessages = [
     </div>
   </section>
 
-  <section>
+  <section class="home-panel home-panel--showcase">
     <div class="container section-block showcase-stack">
       <article class="showcase-card" id="colorvu">
         <div class="showcase-card__media">
-          <img src={resolveMediaUrl(home.nightVision.image)} alt={home.nightVision.imageAlt} loading="lazy" />
+          <img src={resolveMediaUrl(home.nightVision.image, requestOrigin)} alt={home.nightVision.imageAlt} loading="lazy" />
           <span class="showcase-card__badge">{home.nightVision.badge}</span>
         </div>
 
@@ -162,7 +168,7 @@ const smartSectionMessages = [
 
       <article class="showcase-card showcase-card--reverse" id="video-porteros">
         <div class="showcase-card__media">
-          <img src={resolveMediaUrl(home.videoIntercom.image)} alt={home.videoIntercom.imageAlt} loading="lazy" />
+          <img src={resolveMediaUrl(home.videoIntercom.image, requestOrigin)} alt={home.videoIntercom.imageAlt} loading="lazy" />
           <span class="showcase-card__badge">{home.videoIntercom.badge}</span>
         </div>
 
@@ -184,7 +190,7 @@ const smartSectionMessages = [
     </div>
   </section>
 
-  <section id="soluciones">
+  <section class="home-panel home-panel--soft" id="soluciones">
     <div class="container section-block">
       <div class="section-heading">
         <p class="section-eyebrow">{home.quickSolutions.eyebrow}</p>
@@ -212,7 +218,7 @@ const smartSectionMessages = [
     </div>
   </section>
 
-  <section class="band-section" id="infraestructura">
+  <section class="band-section home-panel home-panel--dark" id="infraestructura">
     <div class="container section-block">
       <div class="section-heading section-heading--inverse">
         <p class="section-eyebrow">{home.infrastructure.eyebrow}</p>
@@ -249,13 +255,13 @@ const smartSectionMessages = [
     </div>
   </section>
 
-  <section id="calculadora">
+  <section class="home-panel home-panel--calculator" id="calculadora">
     <div class="container">
       <StorageCalc client:load content={home.storageCalculator} whatsappNumber={site.whatsappNumber} />
     </div>
   </section>
 
-  <section id="confianza">
+  <section class="home-panel home-panel--trust" id="confianza">
     <div class="container trust-banner">
       <div class="trust-layout">
         <div class="section-heading">

@@ -1,5 +1,12 @@
-export function buildCanonical(pathname = "/") {
-  const site = import.meta.env.PUBLIC_SITE_URL || "http://localhost:4321";
+function readRuntimeEnv(name) {
+  return typeof process !== "undefined" ? process.env?.[name] || "" : "";
+}
+
+export function buildCanonical(pathname = "/", requestOrigin = "") {
+  const site =
+    readRuntimeEnv("PUBLIC_SITE_URL") ||
+    import.meta.env.PUBLIC_SITE_URL ||
+    (import.meta.env.DEV ? "http://localhost:4321" : requestOrigin || "");
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  return `${site}${normalized}`;
+  return site ? `${site}${normalized}` : normalized;
 }
